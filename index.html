@@ -4,20 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Server Info</title>
+    <style>
+        body {
+            background-color: #0a0a0f;
+            color: #00ffcc;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 300px;
+            padding: 10px;
+            background-color: #0f0f1f;
+            border: 2px solid #00ffcc;
+            border-radius: 8px;
+            color: #00ffcc;
+            font-size: 1em;
+            outline: none;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00ffcc;
+            border: none;
+            border-radius: 8px;
+            color: #0a0a0f;
+            font-size: 1em;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #007f66;
+        }
+        #info {
+            width: 300px;
+            text-align: center;
+            font-size: 1.2em;
+            line-height: 1.5;
+            color: #00e6b8;
+            border: 1px solid #00ffcc;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #101020;
+        }
+    </style>
 </head>
 <body>
-    <h1>Discord Server Information</h1>
-    <label for="serverId">Enter Server ID:</label>
-    <input type="text" id="serverId" placeholder="Server ID">
-    <button onclick="getServerInfo()">Get Server Info</button>
+    <h1>Discord Server Info Finder</h1>
+    
+    <div class="input-container">
+        <label for="botToken">Enter Bot Token:</label>
+        <input type="password" id="botToken" placeholder="Bot Token">
+        
+        <label for="serverId">Enter Server ID:</label>
+        <input type="text" id="serverId" placeholder="Server ID">
+        
+        <button onclick="getServerInfo()">Get Server Info</button>
+    </div>
 
     <h2>Server Information</h2>
-    <p id="info"></p>
+    <p id="info">Enter details and click "Get Server Info" to see server data.</p>
 
     <script>
         async function getServerInfo() {
+            const botToken = document.getElementById('botToken').value;
             const serverId = document.getElementById('serverId').value;
-            const botToken = 'MTI5OTQzMDM2OTY1Njk2NzMxOQ.GbkjVs.tuSiLIiGici-Y3hiqTtsbCeLj_BOjp94BSTkz8'; // Replace with your bot token
+
+            if (!botToken || !serverId) {
+                document.getElementById('info').innerText = "Please enter both the bot token and server ID.";
+                return;
+            }
 
             const response = await fetch(`https://discord.com/api/v10/guilds/${serverId}`, {
                 headers: {
@@ -33,11 +109,11 @@
                     Server Name: ${data.name}
                     Server ID: ${data.id}
                     Creation Date: ${creationDate.toUTCString()}
-                    Approximate Member Count: ${data.approximate_member_count || 'N/A'}
+                    Member Count: ${data.approximate_member_count || 'N/A'}
                     Description: ${data.description || 'No description'}
                 `;
             } else {
-                document.getElementById('info').innerText = "Unable to retrieve server information.";
+                document.getElementById('info').innerText = "Unable to retrieve server information. Check your inputs.";
             }
         }
     </script>
